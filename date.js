@@ -1,22 +1,20 @@
-module.exports.getDate =getDate;
-module.exports.getDay =getDay;
+//jshint esversion:6
 
+exports.getDate =function(){
+    let today = new Date();
 
-function getDate(){
-let today = new Date();
-   
-let options ={
+   let options ={
     weekday:"long",
     day: "numeric",
     month:"long"
 
 };
-
 let day= today.toLocaleDateString("en-US",options);
 return day;
 }
 
-function getDay(){
+exports.getDay =function getDay(){
+
     let today = new Date();
        
     let options ={
