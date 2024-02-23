@@ -5,7 +5,7 @@ const bodyParser =require("body-parser");
 
 const app = express();
 
-let items=["Buy food","Cook food","Eat food"];
+let items=[];
 let workItems=[];
 
     
