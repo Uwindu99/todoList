@@ -61,18 +61,25 @@ app.get("/",function(req,res){
 
 
 app.post("/",function(req,res){
-    let item = req.body.newItem;
+    const itemName = req.body.newItem;
 
-   
+    const item = new Item({
+        name:itemName
+    });
+    item.save();
+    res.redirect("/");
+})
 
-    if(req.body.list==="WorkList"){
-        workItems.push(item);
-        res.redirect("/work");
-    }else{
-        items.push(item);
-        res.redirect("/");
-    }   
-    
+app.post("/delete",function(req,res){
+    const checkedId= req.body.checkbox;
+
+    Item.findByIdAndDelete(checkedId).then(function () {
+        console.log("Successfully delete");
+      })
+      .catch(function (err) {
+        console.log(err);
+      });
+      res.redirect("/");
 })
 
 app.get("/work",function(req,res){
