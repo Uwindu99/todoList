@@ -30,23 +30,35 @@ const item3 = new Item({
 
 const defaultItem=[item1,item2,item3];
 
-Item.insertMany(defaultItem)
-.then(function () {
-    console.log("Successfully saved defult items to DB");
-  })
-  .catch(function (err) {
-    console.log(err);
-  });
+/**/
+   
+
+
 
 
 
 app.get("/",function(req,res){
-    
+
+    Item.find({}).then(function(items,err){
+
+    if(items.length===0){
+        Item.insertMany(defaultItem)
+        .then(function () {
+        console.log("Successfully saved defult items to DB");
+        })
+        .catch(function (err) {
+        console.log(err);
+        });
+        res.redirect("/");
+    }else{
+        res.render("lists",{ listTitle :"Today",newList :items});  
+    }
+    });
+})
+
+
    
 
-
-    res.render("lists",{ listTitle :"Today",newList :items });
-});
 
 app.post("/",function(req,res){
     let item = req.body.newItem;
