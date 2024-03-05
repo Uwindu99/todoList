@@ -28,21 +28,20 @@ const item3 = new Item({
     name:"<--press this to delete an item"
 });
 
-const defaultItem=[item1,item2,item3];
+const defaultItems=[item1,item2,item3];
 
-/**/
-   
-
-
-
-
+const listSchema={
+    name:String,
+    items:[itemSchema]
+};
+const List = mongoose.model("List",listSchema);
 
 app.get("/",function(req,res){
 
     Item.find({}).then(function(items,err){
 
     if(items.length===0){
-        Item.insertMany(defaultItem)
+        Item.insertMany(defaultItems)
         .then(function () {
         console.log("Successfully saved defult items to DB");
         })
@@ -56,7 +55,28 @@ app.get("/",function(req,res){
     });
 })
 
+app.get("/:customListName",function(req,res){
+    const customListName = req.params.customListName;
 
+    List.findOne({name:customListName}).then(function(foundList,err){
+    if(!err){
+        if(!foundList){
+            const list = new List({
+                name:customListName,
+                items:defaultItems
+            });
+        
+            list.save();
+            res.redirect("/"+ customListName);
+        }else{
+            res.render("lists",{ listTitle :foundList.name,newList :foundList.items});  
+        }
+    }
+
+    });
+
+  
+});
    
 
 
@@ -81,12 +101,6 @@ app.post("/delete",function(req,res){
       });
       res.redirect("/");
 })
-
-app.get("/work",function(req,res){
-    res.render("lists",{listTitle : "WorkList", newList:workItems});
-});
-
-
 
 
 app.listen(3000,function(){
